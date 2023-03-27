@@ -14,5 +14,12 @@ describe("Company Routes", () => {
     expect(response.statusCode).toBe(200);
     const companies = response.json();
     expect(companies.length).toBe(2);
+    const [company] = companies;
+    expect(company.hasOwnProperty("name")).toBeTruthy();
+    expect(company.hasOwnProperty("location")).toBeTruthy();
+    expect(company.hasOwnProperty("description")).toBeTruthy();
+    const { location } = company;
+    expect(location.hasOwnProperty("city")).toBeTruthy();
+    expect(location.hasOwnProperty("state")).toBeTruthy();
   });
 });

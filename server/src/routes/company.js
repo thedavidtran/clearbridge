@@ -1,10 +1,50 @@
 export default async (fastify) => {
-  fastify.get("/", async (request, reply) => {
-    reply.send([
-      { name: "Company A", id: 1 },
-      { name: "Company B", id: 2 },
-    ]);
-  });
+  fastify.get(
+    "/",
+    {
+      schema: {
+        response: {
+          "2xx": {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                description: { type: "string" },
+                location: {
+                  type: "object",
+                  properties: {
+                    city: {
+                      type: "string",
+                    },
+                    state: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      reply.send([
+        {
+          name: "Company A",
+          location: { city: "Denver", state: "CO" },
+          description: "description about company a",
+          id: 1,
+        },
+        {
+          name: "Company B",
+          location: { city: "San Francisco", state: "CA" },
+          description: "description about company b",
+          id: 2,
+        },
+      ]);
+    }
+  );
 };
 
 export const autoPrefix = "/companies";
