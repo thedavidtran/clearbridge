@@ -3,6 +3,7 @@ import App from "../App";
 
 test("renders code challenge", () => {
   render(<App />);
-  const element = screen.getByText(/Company A/i);
-  expect(element).toBeInTheDocument();
+  expect(
+    screen.getByRole("button", { name: "Add Company" })
+  ).toBeInTheDocument();
 });
