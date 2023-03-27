@@ -1,4 +1,5 @@
 import CompanyList from "./CompanyList";
+import CompanyAddButton from "./CompanyAddButton";
 
 const mockData = [
   {
@@ -19,6 +20,11 @@ const Company = () => {
   return (
     <div className="container mx-auto bg-white rounded-xl border p-8 m-4">
       <CompanyList companies={mockData} />
+      <div className="py-2">
+        <div className="float-right">
+          <CompanyAddButton />
+        </div>
+      </div>
     </div>
   );
 };
