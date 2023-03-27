@@ -11,4 +11,6 @@ test("renders Tile component", () => {
     />
   );
   expect(screen.getByText("Caption")).toBeInTheDocument();
+  expect(screen.getByText("SubCaption")).toBeInTheDocument();
+  expect(screen.getByText("Description")).toBeInTheDocument();
 });
