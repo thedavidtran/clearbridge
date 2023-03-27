@@ -1,6 +1,6 @@
 import app from "./app.js";
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 5000;
 const start = async () => {
   try {
     await app.listen({ port: DEFAULT_PORT });
