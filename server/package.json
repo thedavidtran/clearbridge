@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run --no-threads",
+    "coverage": "vitest run --coverage --no-threads"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,9 @@
     "fastify": "^4.15.0"
   },
   "devDependencies": {
+    "@vitest/coverage-c8": "^0.29.7",
     "eslint": "^8.36.0",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.7",
+    "vitest": "^0.29.7"
   }
 }
