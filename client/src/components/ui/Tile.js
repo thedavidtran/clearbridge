@@ -10,13 +10,16 @@
  */
 const Tile = ({ caption, subCaption, description }) => {
   return (
-    <div>
-      <div>
-        <h1>{caption}</h1>
+    <div className="border border-slate-200 border-1 h-48">
+      <div className="h-12 p-2 bg-slate-200 flex items-center space-x-4">
+        <h1 className="text-2xl font-bold ml-2">{caption}</h1>
+        <p>|</p>
         <h2>{subCaption}</h2>
-        <div>more...</div>
+        <div className="float-right">more...</div>
       </div>
-      <p>{description}</p>
+      <div className="p-2 h-24 min-h-full">
+        <p>{description}</p>
+      </div>
     </div>
   );
 };

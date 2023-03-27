@@ -4,7 +4,7 @@ import Company from "./pages/Company/Company";
 
 const App = () => {
   return (
-    <div className="App">
+    <div className="bg-slate-800 p-4 h-max">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Company />} />

@@ -9,7 +9,7 @@ import companyLib from "../../utils/company";
  */
 const CompanyList = ({ companies }) => {
   return (
-    <div>
+    <div className="grid grid-cols-1 gap-2">
       {companies.map((company) => (
         <CompanyTile
           key={company.id}

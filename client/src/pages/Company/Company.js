@@ -16,7 +16,11 @@ const mockData = [
 ];
 
 const Company = () => {
-  return <CompanyList companies={mockData} />;
+  return (
+    <div className="container mx-auto bg-white rounded-xl border p-8 m-4">
+      <CompanyList companies={mockData} />
+    </div>
+  );
 };
 
 export default Company;
