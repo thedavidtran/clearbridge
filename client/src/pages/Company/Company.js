@@ -21,7 +21,7 @@ const Company = () => {
   });
 
   return (
-    <div className="container mx-auto bg-white rounded-xl border p-8 m-4">
+    <div className="">
       {isError ? (
         <div>Error occurred: {error.message}</div>
       ) : isLoading ? (

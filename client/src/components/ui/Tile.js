@@ -17,7 +17,7 @@ const Tile = ({ caption, subCaption, description }) => {
         <h2>{subCaption}</h2>
         <div className="float-right">more...</div>
       </div>
-      <div className="p-2 h-24">
+      <div className="p-2">
         <p>{description}</p>
       </div>
     </div>

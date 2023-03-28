@@ -1,13 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import Layout from "./pages/layout/Layout";
 import Company from "./pages/Company/Company";
+import CompanyCreate from "./pages/Company/CompanyCreate";
 
 const App = () => {
   return (
-    <div className="bg-slate-800 p-4 h-max">
+    <div className="h-max">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Company />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Company />} />
+            <Route path="/add" element={<CompanyCreate />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
