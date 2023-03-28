@@ -1,4 +1,33 @@
 export default async (fastify) => {
+  fastify.addSchema({
+    $id: "company",
+    type: "object",
+    required: ["name", "location", "description"],
+    properties: {
+      name: {
+        type: "string",
+        maxLength: 30,
+      },
+      location: {
+        type: "object",
+        required: ["city", "state"],
+        properties: {
+          city: {
+            type: "string",
+            maxLength: 50,
+          },
+          state: {
+            type: "string",
+            maxLength: 5,
+          },
+        },
+      },
+      description: {
+        type: "string",
+        maxLength: 500,
+      },
+    },
+  });
   fastify.get(
     "/",
     {
@@ -6,24 +35,7 @@ export default async (fastify) => {
         response: {
           "2xx": {
             type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                description: { type: "string" },
-                location: {
-                  type: "object",
-                  properties: {
-                    city: {
-                      type: "string",
-                    },
-                    state: {
-                      type: "string",
-                    },
-                  },
-                },
-              },
-            },
+            items: { $ref: "company" },
           },
         },
       },
@@ -51,31 +63,7 @@ export default async (fastify) => {
       schema: {
         body: {
           type: "object",
-          required: ["name", "location", "description"],
-          properties: {
-            name: {
-              type: "string",
-              maxLength: 30,
-            },
-            location: {
-              type: "object",
-              required: ["city", "state"],
-              properties: {
-                city: {
-                  type: "string",
-                  maxLength: 50,
-                },
-                state: {
-                  type: "string",
-                  maxLength: 5,
-                },
-              },
-            },
-            description: {
-              type: "string",
-              maxLength: 500,
-            },
-          },
+          $ref: "company",
         },
       },
     },
