@@ -53,20 +53,27 @@ export default async (fastify) => {
           type: "object",
           required: ["name", "location", "description"],
           properties: {
-            name: { type: "string" },
+            name: {
+              type: "string",
+              maxLength: 30,
+            },
             location: {
               type: "object",
               required: ["city", "state"],
               properties: {
-                city: { type: "string" },
-                state: { type: "string" },
+                city: {
+                  type: "string",
+                  maxLength: 50,
+                },
+                state: {
+                  type: "string",
+                  maxLength: 5,
+                },
               },
             },
             description: {
               type: "string",
-            },
-            founded: {
-              type: "string",
+              maxLength: 500,
             },
           },
         },

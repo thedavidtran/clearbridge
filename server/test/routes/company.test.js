@@ -121,5 +121,86 @@ describe("Company Routes", () => {
         "body must have required property 'description'"
       );
     });
+    test("request name field max length", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: companiesUri,
+        body: {
+          name: "Company X Very Long Name...........................................",
+          location: {
+            city: "Toronto",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+      });
+      expect(response.statusCode).toBe(400);
+      expect(JSON.parse(response.body).message).toBe(
+        "body/name must NOT have more than 30 characters"
+      );
+    });
+    test("request location/city field max length", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: companiesUri,
+        body: {
+          name: "Company X",
+          location: {
+            city: "Toronto Very Long ...................................................................",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+      });
+      expect(response.statusCode).toBe(400);
+      expect(JSON.parse(response.body).message).toBe(
+        "body/location/city must NOT have more than 50 characters"
+      );
+    });
+    test("request location/state field max length", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: companiesUri,
+        body: {
+          name: "Company X",
+          location: {
+            city: "Toronto",
+            state: "ON........",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+      });
+      expect(response.statusCode).toBe(400);
+      expect(JSON.parse(response.body).message).toBe(
+        "body/location/state must NOT have more than 5 characters"
+      );
+    });
+    test("request description field max length", async () => {
+      const response = await app.inject({
+        method: "POST",
+        url: companiesUri,
+        body: {
+          name: "Company X",
+          location: {
+            city: "Toronto",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890" +
+            "12345", // 505
+        },
+      });
+      expect(response.statusCode).toBe(400);
+      expect(JSON.parse(response.body).message).toBe(
+        "body/description must NOT have more than 500 characters"
+      );
+    });
   });
 });
