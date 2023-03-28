@@ -28,6 +28,9 @@ const companySchema = {
       type: "string",
       maxLength: 500,
     },
+    founded: {
+      type: "string",
+    },
   },
 };
 
@@ -87,6 +90,7 @@ export default async (fastify) => {
     },
     async (request, reply) => {
       const company = { ...request.body };
+      console.debug(company);
       company.id = mockData.length + 1;
       mockData.push(company);
       reply.send({ id: company.id, name: company.name });

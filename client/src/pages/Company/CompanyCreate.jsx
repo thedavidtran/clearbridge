@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import Input from "../../components/ui/Input";
@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 const CompanyCreate = () => {
   const navigate = useNavigate();
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const companyMutation = useMutation({
     mutationFn: async (company) => {
@@ -15,9 +17,19 @@ const CompanyCreate = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(company),
+      }).then(async (res) => {
+        if (!res.ok) {
+          // Handle bad responses
+          let body = await res.json();
+          const { message = "Unknown error" } = body;
+          setIsError(true);
+          setErrorMessage(message);
+          throw new Error(message);
+        }
       });
     },
-    onSuccess() {
+    onSuccess(x) {
+      alert(`Company ${companyNameRef.current?.value} created.`);
       navigate("/");
     },
   });
@@ -36,7 +48,15 @@ const CompanyCreate = () => {
         state: stateRef.current?.value,
       },
       description: descriptionRef.current?.value,
+      founded: foundedRef.current?.value,
     });
+  };
+
+  const clearError = () => {
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
   };
 
   return (
@@ -44,30 +64,59 @@ const CompanyCreate = () => {
       <h1 className={"text-2xl font-bold text-center"}>Create a New Company</h1>
       <form
         onSubmit={submitHandler}
-        className="grid grid-cols-6 gap-x-2 gap-y-4 items-center"
+        className="grid grid-cols-3 gap-x-2 gap-y-2 items-center"
       >
-        <label htmlFor="companyName">Company Name</label>
+        {isError ? (
+          <div className="col-span-full text-red-700">{errorMessage}</div>
+        ) : null}
+        <label className="text-bold col-span-full" htmlFor="companyName">
+          Company Name
+        </label>
         <Input
           id="companyName"
-          className="w-full col-span-5"
+          className="col-span-full"
           required
           ref={companyNameRef}
+          onChange={clearError}
+          maxLength="30"
         />
-        <label htmlFor="city">City</label>
-        <Input id="city" className="border-2" required ref={cityRef} />
-        <label htmlFor="state">State</label>
-        <Input id="state" required ref={stateRef} />
-        <label htmlFor="founded">Founded</label>
-        <Input id="founded" ref={foundedRef} />
-        <label className="col-span-6">Description</label>
+        <label className="text-bold" htmlFor="city">
+          City
+        </label>
+        <label className="text-bold" htmlFor="state">
+          State
+        </label>
+        <label className="text-bold" htmlFor="founded">
+          Founded
+        </label>
+        <Input
+          id="city"
+          required
+          ref={cityRef}
+          onChange={clearError}
+          maxLength="50"
+        />
+        <Input
+          id="state"
+          required
+          ref={stateRef}
+          onChange={clearError}
+          maxLength="5"
+        />
+        <Input type="date" ref={foundedRef} onChange={clearError} />
+        <label className="text-bold col-span-full">Description</label>
         <Input
           id="description"
-          className="col-span-6"
+          className="col-span-full"
           htmlFor="description"
           required
           ref={descriptionRef}
+          onChange={clearError}
+          maxLength="500"
         />
-        <button>Save</button>
+        <button className="w-100 rounded-full px-4 py-1 mx-1 items-center bg-slate-400 hover:bg-slate-300">
+          Save
+        </button>
       </form>
     </>
   );
