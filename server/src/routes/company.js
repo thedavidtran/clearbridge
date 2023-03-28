@@ -45,6 +45,37 @@ export default async (fastify) => {
       ]);
     }
   );
+  fastify.post(
+    "/",
+    {
+      schema: {
+        body: {
+          type: "object",
+          required: ["name", "location", "description"],
+          properties: {
+            name: { type: "string" },
+            location: {
+              type: "object",
+              required: ["city", "state"],
+              properties: {
+                city: { type: "string" },
+                state: { type: "string" },
+              },
+            },
+            description: {
+              type: "string",
+            },
+            founded: {
+              type: "string",
+            },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      console.log(request.body);
+    }
+  );
 };
 
 export const autoPrefix = "/companies";
