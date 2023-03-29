@@ -1,5 +1,7 @@
 /** Company related utility functions */
 
+import dayjs from "dayjs";
+
 /**
  * @typedef {object} Company
  * @prop {string} id Company identifier.
@@ -23,8 +25,18 @@ const getLocationCaption = (location) => {
   return `${location.city}, ${location.state}`;
 };
 
+/**
+ * Generates the date formatted string given the date.
+ * @param {date|string} day Date object or ISOString
+ * @returns {string} Formatted date string.
+ */
+const getDateCaption = (day) => {
+  return dayjs(day).format("MMM D, YYYY");
+};
+
 const companyLib = {
   getLocationCaption,
+  getDateCaption,
 };
 
 export default companyLib;

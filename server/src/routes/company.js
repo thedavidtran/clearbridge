@@ -1,10 +1,15 @@
+import CompanyService from "../services/company.js";
+import CompanyModel from "../model/company.js";
+
+const companyService = CompanyService(CompanyModel);
+
 const companySchema = {
   $id: "company",
   type: "object",
   required: ["name", "location", "description"],
   properties: {
     id: {
-      type: "number",
+      type: "string",
     },
     name: {
       type: "string",
@@ -34,22 +39,6 @@ const companySchema = {
   },
 };
 
-// TODO: Remove once persistence implemented
-const mockData = [
-  {
-    name: "Company A",
-    location: { city: "Denver", state: "CO" },
-    description: "description about company a",
-    id: 1,
-  },
-  {
-    name: "Company B",
-    location: { city: "San Francisco", state: "CA" },
-    description: "description about company b",
-    id: 2,
-  },
-];
-
 export default async (fastify) => {
   fastify.addSchema(companySchema);
   fastify.get(
@@ -65,7 +54,8 @@ export default async (fastify) => {
       },
     },
     async (request, reply) => {
-      reply.send(mockData);
+      let companies = await companyService.find();
+      reply.send(companies);
     }
   );
   fastify.post(
@@ -81,7 +71,7 @@ export default async (fastify) => {
             type: "object",
             properties: {
               id: {
-                type: "number",
+                type: "string",
               },
             },
           },
@@ -90,10 +80,33 @@ export default async (fastify) => {
     },
     async (request, reply) => {
       const company = { ...request.body };
-      console.debug(company);
-      company.id = mockData.length + 1;
-      mockData.push(company);
-      reply.send({ id: company.id, name: company.name });
+      console.log(company);
+      await companyService.insert(company);
+      // TODO get the actual id
+      reply.send({ id: "1234567890123456789012" });
+    }
+  );
+  fastify.get(
+    "/:id",
+    {
+      schema: {
+        response: {
+          "2xx": {
+            type: "object",
+            $ref: "company",
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params;
+      const company = await companyService.findOne(id);
+      if (!company) {
+        const error = new Error(`Company not found: ${id}`);
+        error.status = 404;
+        throw error;
+      }
+      reply.send(company);
     }
   );
 };

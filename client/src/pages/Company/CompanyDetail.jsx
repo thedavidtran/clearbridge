@@ -11,7 +11,6 @@ const CompanyDetail = () => {
     data: company,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ["detail"],
     queryFn: () => {
@@ -24,15 +23,15 @@ const CompanyDetail = () => {
     },
   });
 
-  if (isError) return <div>Error occurred: {error.message}</div>;
   if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error</div>;
   const { name, founded, location, description } = company;
 
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">{name}</h1>
       <div className="flex items-center space-x-4 py-2 justify-center">
-        {founded ? <p>{founded}</p> : null}
+        {founded ? <p>{companyLib.getDateCaption(founded)}</p> : null}
         <p>{companyLib.getLocationCaption(location)}</p>
         <p>|</p>
         <Button>Edit</Button>

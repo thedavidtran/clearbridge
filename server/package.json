@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node --require dotenv/config src/server.js",
     "test": "vitest run --no-threads",
     "coverage": "vitest run --coverage --no-threads"
   },
@@ -14,7 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
-    "fastify": "^4.15.0"
+    "dotenv": "^16.0.3",
+    "fastify": "^4.15.0",
+    "mongoose": "^7.0.3"
   },
   "devDependencies": {
     "@vitest/coverage-c8": "^0.29.7",

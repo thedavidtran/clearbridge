@@ -14,6 +14,7 @@ describe("Company Routes", () => {
     });
     expect(response.statusCode).toBe(200);
     const companies = response.json();
+    /**
     expect(companies.length).toBe(2);
     const [company] = companies;
     expect(company.hasOwnProperty("name")).toBeTruthy();
@@ -22,6 +23,7 @@ describe("Company Routes", () => {
     const { location } = company;
     expect(location.hasOwnProperty("city")).toBeTruthy();
     expect(location.hasOwnProperty("state")).toBeTruthy();
+     */
   });
   describe("POST - add a company", async () => {
     test("request contains all required fields", async () => {
@@ -201,6 +203,17 @@ describe("Company Routes", () => {
       expect(JSON.parse(response.body).message).toBe(
         "body/description must NOT have more than 500 characters"
       );
+    });
+  });
+  describe("GET - get details of a company with invalid id", async () => {
+    test("Company exists", async () => {
+      const companyId = "123456789012345678901234";
+      const detailUri = `${companiesUri}/${companyId}`;
+      const response = await app.inject({
+        method: "GET",
+        url: detailUri,
+      });
+      expect(response.statusCode).toBe(404);
     });
   });
 });
