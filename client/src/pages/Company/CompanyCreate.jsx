@@ -87,7 +87,7 @@ const CompanyCreate = () => {
           State
         </label>
         <label className="text-bold" htmlFor="founded">
-          Founded
+          Founded Date
         </label>
         <Input
           id="city"
