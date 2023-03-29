@@ -13,6 +13,7 @@ const CompanyList = ({ companies }) => {
       {companies.map((company) => (
         <CompanyTile
           key={company.id}
+          id={company.id}
           name={company.name}
           description={company.description}
           location={companyLib.getLocationCaption(company.location)}

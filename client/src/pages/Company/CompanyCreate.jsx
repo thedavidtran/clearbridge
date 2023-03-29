@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
+import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +29,7 @@ const CompanyCreate = () => {
         }
       });
     },
-    onSuccess(x) {
+    onSuccess() {
       alert(`Company ${companyNameRef.current?.value} created.`);
       navigate("/");
     },
@@ -61,7 +62,7 @@ const CompanyCreate = () => {
 
   return (
     <>
-      <h1 className={"text-2xl font-bold text-center"}>Create a New Company</h1>
+      <h1 className="text-2xl font-bold text-center">Create a New Company</h1>
       <form
         onSubmit={submitHandler}
         className="grid grid-cols-3 gap-x-2 gap-y-2 items-center"
@@ -114,9 +115,7 @@ const CompanyCreate = () => {
           onChange={clearError}
           maxLength="500"
         />
-        <button className="w-100 rounded-full px-4 py-1 mx-1 items-center bg-slate-400 hover:bg-slate-300">
-          Save
-        </button>
+        <Button>Save</Button>
       </form>
     </>
   );

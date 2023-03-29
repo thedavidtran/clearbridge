@@ -9,6 +9,14 @@ import CompanyList from "../../../pages/Company/CompanyList";
 
 import companyLib from "../../../utils/company.js";
 
+const mockedNavigator = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => ({
+    navigate: mockedNavigator,
+  }),
+}));
+
 const mockCompanies = [
   {
     id: "1",
