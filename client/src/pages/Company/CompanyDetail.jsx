@@ -1,18 +1,19 @@
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import Button from "../../components/ui/Button";
 
 import companyLib from "../../utils/company";
 
 const CompanyDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const {
     data: company,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["detail"],
+    queryKey: ["companyDetail"],
     queryFn: () => {
       const url = `/companies/${id}`;
       return fetch(url, {
@@ -22,6 +23,27 @@ const CompanyDetail = () => {
       });
     },
   });
+
+  const companyMutation = useMutation({
+    mutationKey: ["companyDelete"],
+    mutationFn: () => {
+      const url = `/companies/${id}`;
+      return fetch(url, {
+        method: "DELETE",
+      }).then(async (res) => {
+        return res.json();
+      });
+    },
+    onSuccess: (data) => {
+      const { name } = data;
+      alert(`Company ${name} removed.`);
+      navigate("/");
+    },
+  });
+
+  const deleteHandler = async () => {
+    await companyMutation.mutate();
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
@@ -35,7 +57,7 @@ const CompanyDetail = () => {
         <p>{companyLib.getLocationCaption(location)}</p>
         <p>|</p>
         <Button>Edit</Button>
-        <Button>Delete</Button>
+        <Button onClick={deleteHandler}>Delete</Button>
       </div>
       <div>{description}</div>
     </div>

@@ -11,15 +11,13 @@ const find = (CompanyModel) => async () => {
 };
 
 const toCompanyObject = (companyDocument) => {
-  console.log(companyDocument);
-  const c = {
+  return {
     name: companyDocument.name,
     location: companyDocument.location,
     description: companyDocument.description,
     id: companyDocument._id.toHexString(),
     founded: companyDocument.founded,
   };
-  return c;
 };
 
 const insert = (CompanyModel) => async (data) => {
@@ -41,10 +39,21 @@ const findOne = (CompanyModel) => async (id) => {
   }
 };
 
+const deleteOne = (CompanyModel) => async (id) => {
+  try {
+    const company = await CompanyModel.findByIdAndRemove(id);
+    if (!company) throw new Error("Company does not exist");
+    return toCompanyObject(company);
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default (CompanyModel) => {
   return {
     find: find(CompanyModel),
     findOne: findOne(CompanyModel),
     insert: insert(CompanyModel),
+    deleteOne: deleteOne(CompanyModel),
   };
 };

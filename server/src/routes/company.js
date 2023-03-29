@@ -104,11 +104,27 @@ export default async (fastify) => {
       if (!company) {
         const error = new Error(`Company not found: ${id}`);
         error.status = 404;
-        throw error;
+        reply.send(error);
       }
       reply.send(company);
     }
   );
+  fastify.delete("/:companyId", async (request, reply) => {
+    const { companyId } = request.params;
+    if (!companyId) {
+      const error = new Error(`Invalid company id: ${companyId}`);
+      error.status = 400;
+      reply.send(error);
+    }
+    try {
+      const company = await companyService.deleteOne(companyId);
+      reply.send(company);
+    } catch (err) {
+      const error = new Error(`Error removing company id: ${companyId}`);
+      error.status = 404;
+      reply.send(error);
+    }
+  });
 };
 
 export const autoPrefix = "/companies";
