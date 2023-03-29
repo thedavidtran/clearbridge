@@ -20,9 +20,19 @@ const toCompanyObject = (companyDocument) => {
   };
 };
 
+const sanitizeCompanyObject = (company) => {
+  return {
+    name: company.name,
+    location: company.location,
+    description: company.description,
+    founded: company.founded,
+  };
+};
+
 const insert = (CompanyModel) => async (data) => {
   try {
-    await CompanyModel.create(data);
+    const result = await CompanyModel.create(sanitizeCompanyObject(data));
+    return toCompanyObject(result);
   } catch (err) {
     console.error(err);
     throw err;
@@ -49,11 +59,25 @@ const deleteOne = (CompanyModel) => async (id) => {
   }
 };
 
+const update = (CompanyModel) => async (id, data) => {
+  try {
+    const company = await CompanyModel.findByIdAndUpdate(
+      id,
+      sanitizeCompanyObject(data)
+    );
+    if (!company) throw new Error("Company does not exist");
+    return toCompanyObject(company);
+  } catch (err) {
+    throw err;
+  }
+};
+
 export default (CompanyModel) => {
   return {
     find: find(CompanyModel),
     findOne: findOne(CompanyModel),
     insert: insert(CompanyModel),
     deleteOne: deleteOne(CompanyModel),
+    update: update(CompanyModel),
   };
 };

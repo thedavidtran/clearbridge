@@ -73,6 +73,9 @@ export default async (fastify) => {
               id: {
                 type: "string",
               },
+              name: {
+                type: "string",
+              },
             },
           },
         },
@@ -80,10 +83,8 @@ export default async (fastify) => {
     },
     async (request, reply) => {
       const company = { ...request.body };
-      console.log(company);
-      await companyService.insert(company);
-      // TODO get the actual id
-      reply.send({ id: "1234567890123456789012" });
+      const result = await companyService.insert(company);
+      reply.send(result);
     }
   );
   fastify.get(
@@ -125,6 +126,47 @@ export default async (fastify) => {
       reply.send(error);
     }
   });
+  fastify.patch(
+    "/:companyId",
+    {
+      schema: {
+        body: {
+          type: "object",
+          $ref: "company",
+        },
+        response: {
+          "2xx": {
+            type: "object",
+            properties: {
+              id: {
+                type: "string",
+              },
+              name: {
+                type: "string",
+              },
+            },
+          },
+        },
+      },
+    },
+    async (request, reply) => {
+      const { companyId } = request.params;
+      if (!companyId) {
+        const error = new Error(`Invalid company id: ${companyId}`);
+        error.status = 400;
+        reply.send(error);
+      }
+      const company = { ...request.body };
+      try {
+        const previous = await companyService.update(companyId, company);
+        reply.send(previous);
+      } catch (err) {
+        const error = new Error(`Failed to update company id: ${companyId}`);
+        error.status = 500;
+        reply.send(error);
+      }
+    }
+  );
 };
 
 export const autoPrefix = "/companies";

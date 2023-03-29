@@ -32,21 +32,21 @@ const CompanyEdit = ({ isCreate }) => {
     },
     refetchOnWindowFocus: false,
     onSuccess(data) {
-      console.log("edit screen fetch", data);
-      setCompany({
+      const company = {
         name: data.name,
         city: data.location.city,
         state: data.location.state,
-        founded: dayjs(data.founded).format("YYYY-MM-DD"),
+        founded: data.founded ? dayjs(data.founded).format("YYYY-MM-DD") : "",
         description: data.description,
-      });
+      };
+      setCompany(company);
     },
     enabled: !!id,
   });
 
   const companyMutation = useMutation({
+    mutationKey: isCreate ? ["companyCreate"] : ["companyUpdate", id],
     mutationFn: async (company) => {
-      // TODO update url for update
       await fetch(isCreate ? "/companies" : `/companies/${id}`, {
         method: isCreate ? "POST" : "PATCH",
         headers: {
@@ -62,14 +62,11 @@ const CompanyEdit = ({ isCreate }) => {
           setErrorMessage(message);
           throw new Error(message);
         }
+        return res.json();
       });
     },
     onSuccess() {
-      alert(
-        `Company ${companyNameRef.current?.value} ${
-          isCreate ? "created" : "updated"
-        }.`
-      );
+      alert(`Company ${isCreate ? "created" : "updated"}.`);
       navigate("/");
     },
   });
@@ -110,6 +107,8 @@ const CompanyEdit = ({ isCreate }) => {
     });
   };
 
+  if (companyMutation.isLoading) return <div>Processing...</div>;
+  if (companyQuery.isError || companyMutation.isError) return <div>Error</div>;
   return (
     <>
       <h1 className="text-2xl font-bold text-center">
