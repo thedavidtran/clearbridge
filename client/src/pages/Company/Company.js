@@ -29,10 +29,8 @@ const Company = () => {
       ) : (
         <CompanyList companies={companies} />
       )}
-      <div className="py-2">
-        <div className="float-right">
-          <CompanyAddButton />
-        </div>
+      <div className="py-2 flex flex-row-reverse">
+        <CompanyAddButton />
       </div>
     </div>
   );

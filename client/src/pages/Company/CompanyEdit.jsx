@@ -1,19 +1,54 @@
 import { useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import dayjs from "dayjs";
 
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
-import { useNavigate } from "react-router-dom";
 
-const CompanyCreate = () => {
+const CompanyEdit = ({ isCreate }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [company, setCompany] = useState({
+    name: "",
+    city: "",
+    state: "",
+    description: "",
+    founded: "",
+  });
+
+  const companyQuery = useQuery({
+    queryKey: ["companyDetail", id],
+    queryFn: () => {
+      const url = `/companies/${id}`;
+      return fetch(url, {
+        method: "GET",
+      }).then(async (res) => {
+        return res.json();
+      });
+    },
+    refetchOnWindowFocus: false,
+    onSuccess(data) {
+      console.log("edit screen fetch", data);
+      setCompany({
+        name: data.name,
+        city: data.location.city,
+        state: data.location.state,
+        founded: dayjs(data.founded).format("YYYY-MM-DD"),
+        description: data.description,
+      });
+    },
+    enabled: !!id,
+  });
 
   const companyMutation = useMutation({
     mutationFn: async (company) => {
-      await fetch("/companies", {
-        method: "POST",
+      // TODO update url for update
+      await fetch(isCreate ? "/companies" : `/companies/${id}`, {
+        method: isCreate ? "POST" : "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -30,10 +65,15 @@ const CompanyCreate = () => {
       });
     },
     onSuccess() {
-      alert(`Company ${companyNameRef.current?.value} created.`);
+      alert(
+        `Company ${companyNameRef.current?.value} ${
+          isCreate ? "created" : "updated"
+        }.`
+      );
       navigate("/");
     },
   });
+
   const companyNameRef = useRef();
   const cityRef = useRef();
   const stateRef = useRef();
@@ -60,9 +100,21 @@ const CompanyCreate = () => {
     }
   };
 
+  const onChange = (event) => {
+    clearError();
+    setCompany((value) => {
+      return {
+        ...value,
+        [event.target.name]: event.target.value,
+      };
+    });
+  };
+
   return (
     <>
-      <h1 className="text-2xl font-bold text-center">Create a New Company</h1>
+      <h1 className="text-2xl font-bold text-center">
+        {isCreate ? "Create a New Company" : "Edit"}
+      </h1>
       <form
         onSubmit={submitHandler}
         className="grid grid-cols-3 gap-x-2 gap-y-2 items-center"
@@ -74,11 +126,12 @@ const CompanyCreate = () => {
           Company Name
         </label>
         <Input
-          id="companyName"
+          name="name"
           className="col-span-full"
           required
           ref={companyNameRef}
-          onChange={clearError}
+          value={company.name}
+          onChange={onChange}
           maxLength="30"
         />
         <label className="text-bold" htmlFor="city">
@@ -91,28 +144,37 @@ const CompanyCreate = () => {
           Founded Date
         </label>
         <Input
-          id="city"
+          name="city"
           required
           ref={cityRef}
-          onChange={clearError}
+          value={company.city}
+          onChange={onChange}
           maxLength="50"
         />
         <Input
-          id="state"
+          name="state"
           required
           ref={stateRef}
-          onChange={clearError}
+          value={company.state}
+          onChange={onChange}
           maxLength="5"
         />
-        <Input type="date" ref={foundedRef} onChange={clearError} />
+        <Input
+          name="founded"
+          type="date"
+          ref={foundedRef}
+          value={company.founded}
+          onChange={onChange}
+        />
         <label className="text-bold col-span-full">Description</label>
         <Input
-          id="description"
+          name="description"
           className="col-span-full"
           htmlFor="description"
           required
           ref={descriptionRef}
-          onChange={clearError}
+          value={company.description}
+          onChange={onChange}
           maxLength="500"
         />
         <Button>Save</Button>
@@ -121,4 +183,4 @@ const CompanyCreate = () => {
   );
 };
 
-export default CompanyCreate;
+export default CompanyEdit;

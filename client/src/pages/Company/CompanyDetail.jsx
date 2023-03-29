@@ -40,9 +40,12 @@ const CompanyDetail = () => {
       navigate("/");
     },
   });
-
   const deleteHandler = async () => {
     await companyMutation.mutate();
+  };
+
+  const editHandler = async () => {
+    navigate(`/edit/${id}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -56,7 +59,7 @@ const CompanyDetail = () => {
         {founded ? <p>{companyLib.getDateCaption(founded)}</p> : null}
         <p>{companyLib.getLocationCaption(location)}</p>
         <p>|</p>
-        <Button>Edit</Button>
+        <Button onClick={editHandler}>Edit</Button>
         <Button onClick={deleteHandler}>Delete</Button>
       </div>
       <div>{description}</div>
