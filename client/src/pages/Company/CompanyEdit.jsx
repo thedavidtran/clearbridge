@@ -176,7 +176,9 @@ const CompanyEdit = ({ isCreate }) => {
           onChange={onChange}
           maxLength="500"
         />
-        <Button>Save</Button>
+        <div className="flex col-span-full flex-grow flex-row-reverse">
+          <Button>Save</Button>
+        </div>
       </form>
     </>
   );

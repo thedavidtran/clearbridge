@@ -1,3 +1,6 @@
+import mongoose from "mongoose";
+
+const { ObjectId } = mongoose.mongo;
 const find = (CompanyModel) => async () => {
   try {
     let companies = await CompanyModel.find();
@@ -45,15 +48,16 @@ const findOne = (CompanyModel) => async (id) => {
     if (!company) return null;
     return toCompanyObject(company);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    throw err;
   }
 };
 
 const deleteOne = (CompanyModel) => async (id) => {
   try {
-    const company = await CompanyModel.findByIdAndRemove(id);
-    if (!company) throw new Error("Company does not exist");
-    return toCompanyObject(company);
+    const result = await CompanyModel.deleteOne({ _id: new ObjectId(id) });
+    if (!result.deletedCount) throw new Error("Company does not exist");
+    return { id };
   } catch (err) {
     throw err;
   }

@@ -16,7 +16,12 @@ const Founder = ({ companyId }) => {
   });
   return (
     <div className="border space-x-4 p-2 my-2">
-      <h2 className="text-xl font-bold">Founders</h2>
+      <div className="flex flex-row">
+        <h2 className="text-xl font-bold flex-grow">Founders</h2>
+        <div className="flex-row-reverse">
+          <FounderAddButton companyId={companyId} />
+        </div>
+      </div>
       <div className="flex flex-row">
         <div className="flex-grow">
           {founderQuery.isError ? (
@@ -31,7 +36,6 @@ const Founder = ({ companyId }) => {
             ))
           )}
         </div>
-        <FounderAddButton />
       </div>
     </div>
   );

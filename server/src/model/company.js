@@ -39,5 +39,13 @@ const companySchema = new Schema(
   { collection: "company" }
 );
 
+companySchema.pre("deleteOne", async function (next) {
+  const companyId = this.getQuery()["_id"];
+  await mongoose.models.Founder.deleteMany({
+    company: companyId,
+  });
+  next();
+});
+
 const CompanyModel = mongoose.models.Company || model("Company", companySchema);
 export default CompanyModel;

@@ -48,7 +48,6 @@ export default async (fastify) => {
     async (request, reply) => {
       const { companyId } = request.query;
       let companies = await founderService.find(companyId);
-      console.log(companies);
       reply.send(companies);
     }
   );
@@ -78,10 +77,8 @@ export default async (fastify) => {
     },
     async (request, reply) => {
       const founder = { ...request.body };
-      console.log(founder);
       const result = await founderService.insert(founder);
-      console.log("result after insertion:", result);
-      // reply.send(result);
+      reply.send(result);
     }
   );
 };

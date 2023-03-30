@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const { ObjectId } = mongoose.mongo;
 const sanitizeFounderObject = (founder) => {
-  console.log(founder);
   return {
     name: founder.name,
     title: founder.title,
