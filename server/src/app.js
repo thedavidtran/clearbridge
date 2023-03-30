@@ -30,7 +30,7 @@ app.register(autoload, {
 
 // Enable CORS
 app.register(cors, {
-  origin: ["*"],
+  origin: false,
 });
 
 export default app;
