@@ -1,4 +1,5 @@
 import fastify from "fastify";
+import cors from "@fastify/cors";
 import autoload from "@fastify/autoload";
 import mongoose from "mongoose";
 import { fileURLToPath } from "url";
@@ -25,6 +26,11 @@ const app = fastify({
 
 app.register(autoload, {
   dir: join(__dirname, "routes"),
+});
+
+// Enable CORS
+app.register(cors, {
+  origin: ["*"],
 });
 
 export default app;
