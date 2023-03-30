@@ -126,7 +126,7 @@ export default async (fastify) => {
       reply.send(error);
     }
   });
-  fastify.patch(
+  fastify.put(
     "/:companyId",
     {
       schema: {

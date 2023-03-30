@@ -48,7 +48,7 @@ const CompanyEdit = ({ isCreate }) => {
     mutationKey: isCreate ? ["companyCreate"] : ["companyUpdate", id],
     mutationFn: async (company) => {
       await fetch(isCreate ? "/companies" : `/companies/${id}`, {
-        method: isCreate ? "POST" : "PATCH",
+        method: isCreate ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",
         },

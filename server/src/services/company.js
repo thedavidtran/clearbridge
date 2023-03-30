@@ -71,7 +71,6 @@ const update = (CompanyModel) => async (id, data) => {
     throw err;
   }
 };
-
 export default (CompanyModel) => {
   return {
     find: find(CompanyModel),
