@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { ObjectId } = mongoose.mongo;
 const find = (CompanyModel) => async () => {
   try {
-    let companies = await CompanyModel.find();
+    let companies = await CompanyModel.find().sort({ name: 1 }).exec();
     // Transform document to objects containing only fields we want to expose.
     companies = companies.map(toCompanyObject);
     return companies;

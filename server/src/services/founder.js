@@ -26,7 +26,9 @@ const find = (FounderModel) => {
     try {
       const query = {};
       if (companyId) query.company = new ObjectId(companyId);
-      return (await FounderModel.find(query)).map(toFounderObject);
+      return (await FounderModel.find(query).sort({ name: 1 }).exec()).map(
+        toFounderObject
+      );
     } catch (err) {
       console.error(err);
       throw err;

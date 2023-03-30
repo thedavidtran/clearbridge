@@ -30,5 +30,9 @@ const founderSchema = new Schema(
   { collection: "founder" }
 );
 
+// Indexes
+founderSchema.index({ name: 1 });
+founderSchema.index({ company: 1, name: 1 });
+
 const FounderModel = mongoose.models.Founder || model("Founder", founderSchema);
 export default FounderModel;
