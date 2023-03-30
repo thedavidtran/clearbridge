@@ -36,7 +36,7 @@ const FounderEdit = ({ isCreate }) => {
       });
     },
     onSuccess() {
-      alert(`Founder ${isCreate ? "created" : "updated"}.`);
+      alert(`Founder ${isCreate ? "added" : "updated"}.`);
       navigate(`/${companyId}`);
     },
   });
@@ -49,6 +49,17 @@ const FounderEdit = ({ isCreate }) => {
     });
   };
 
+  const clearError = () => {
+    if (isError) {
+      setIsError(false);
+      setErrorMessage("");
+    }
+  };
+
+  const onChange = (event) => {
+    clearError();
+  };
+
   return (
     <>
       <h1 className="text-2xl font-bold text-center">
@@ -58,15 +69,18 @@ const FounderEdit = ({ isCreate }) => {
         onSubmit={submitHandler}
         className="grid grid-cols-3 gap-x-2 gap-y-2 items-center"
       >
+        {isError ? (
+          <div className="col-span-full text-red-700">{errorMessage}</div>
+        ) : null}
         <label className="text-bold col-span-full" htmlFor="name">
-          Founder Name
+          Founder Full Name
         </label>
         <Input
           name="name"
           className="col-span-full"
           required
           ref={nameRef}
-          // onChange={onChange}
+          onChange={onChange}
           maxLength="50"
         />
         <label className="text-bold col-span-full" htmlFor="name">
@@ -77,7 +91,7 @@ const FounderEdit = ({ isCreate }) => {
           className="col-span-full"
           required
           ref={titleRef}
-          // onChange={onChange}
+          onChange={onChange}
           maxLength="20"
         />
         <div className="flex col-span-full flex-grow flex-row-reverse">

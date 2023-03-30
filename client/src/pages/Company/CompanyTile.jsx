@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import Tile from "../../components/ui/Tile.js";
+import Tile from "../../components/ui/Tile.jsx";
 import Button from "../../components/ui/Button";
 
 /**
