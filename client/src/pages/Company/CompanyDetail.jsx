@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+import Founder from "../Founder/Founder";
 import Button from "../../components/ui/Button";
 
 import companyLib from "../../utils/company";
@@ -63,6 +64,7 @@ const CompanyDetail = () => {
         <Button onClick={deleteHandler}>Delete</Button>
       </div>
       <div>{description}</div>
+      <Founder companyId={id} />
     </div>
   );
 };
