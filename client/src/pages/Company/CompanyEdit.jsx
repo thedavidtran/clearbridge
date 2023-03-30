@@ -9,7 +9,7 @@ import Input from "../../components/ui/Input";
 
 const CompanyEdit = ({ isCreate }) => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { companyId } = useParams();
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [company, setCompany] = useState({
@@ -21,9 +21,9 @@ const CompanyEdit = ({ isCreate }) => {
   });
 
   const companyQuery = useQuery({
-    queryKey: ["companyDetail", id],
+    queryKey: ["companyDetail", companyId],
     queryFn: () => {
-      const url = `/companies/${id}`;
+      const url = `/companies/${companyId}`;
       return fetch(url, {
         method: "GET",
       }).then(async (res) => {
@@ -41,13 +41,13 @@ const CompanyEdit = ({ isCreate }) => {
       };
       setCompany(company);
     },
-    enabled: !!id,
+    enabled: !!companyId,
   });
 
   const companyMutation = useMutation({
-    mutationKey: isCreate ? ["companyCreate"] : ["companyUpdate", id],
+    mutationKey: isCreate ? ["companyCreate"] : ["companyUpdate", companyId],
     mutationFn: async (company) => {
-      await fetch(isCreate ? "/companies" : `/companies/${id}`, {
+      await fetch(isCreate ? "/companies" : `/companies/${companyId}`, {
         method: isCreate ? "POST" : "PUT",
         headers: {
           "Content-Type": "application/json",

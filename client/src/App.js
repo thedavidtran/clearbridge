@@ -14,10 +14,10 @@ const App = () => {
             <Route path="/" element={<Company />} />
             <Route path="/add" element={<CompanyEdit isCreate={true} />} />
             <Route
-              path="/edit/:id"
+              path="/edit/:companyId"
               element={<CompanyEdit isCreate={false} />}
             />
-            <Route path="/:id" element={<CompanyDetail />} />
+            <Route path="/:companyId" element={<CompanyDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

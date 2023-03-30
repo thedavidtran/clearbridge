@@ -8,17 +8,17 @@ import Button from "../../components/ui/Button";
  * @param {string} name Company name.
  * @param {string} location Location summary string.
  * @param {string} description Company description.
- * @param {number} id Company identifier
+ * @param {string} companyId Company identifier
  * @returns {JSX.Element}
  * @constructor
  */
-const CompanyTile = ({ name, location, description, id }) => {
+const CompanyTile = ({ name, location, description, companyId }) => {
   const navigate = useNavigate();
   return (
     <Tile caption={name} subCaption={location} description={description}>
       <Button
         onClick={() => {
-          navigate(`/${id}`);
+          navigate(`/${companyId}`);
         }}
       >
         More

@@ -8,15 +8,15 @@ import companyLib from "../../utils/company";
 
 const CompanyDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { companyId } = useParams();
   const {
     data: company,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["companyDetail"],
+    queryKey: ["companyDetail", companyId],
     queryFn: () => {
-      const url = `/companies/${id}`;
+      const url = `/companies/${companyId}`;
       return fetch(url, {
         method: "GET",
       }).then(async (res) => {
@@ -28,7 +28,7 @@ const CompanyDetail = () => {
   const companyMutation = useMutation({
     mutationKey: ["companyDelete"],
     mutationFn: () => {
-      const url = `/companies/${id}`;
+      const url = `/companies/${companyId}`;
       return fetch(url, {
         method: "DELETE",
       }).then(async (res) => {
@@ -46,7 +46,7 @@ const CompanyDetail = () => {
   };
 
   const editHandler = async () => {
-    navigate(`/edit/${id}`);
+    navigate(`/edit/${companyId}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -64,7 +64,7 @@ const CompanyDetail = () => {
         <Button onClick={deleteHandler}>Delete</Button>
       </div>
       <div>{description}</div>
-      <Founder companyId={id} />
+      <Founder companyId={companyId} />
     </div>
   );
 };
