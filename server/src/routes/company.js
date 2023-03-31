@@ -112,11 +112,6 @@ export default async (fastify) => {
   );
   fastify.delete("/:companyId", async (request, reply) => {
     const { companyId } = request.params;
-    if (!companyId) {
-      const error = new Error(`Invalid company id: ${companyId}`);
-      error.status = 400;
-      reply.send(error);
-    }
     try {
       const company = await companyService.deleteOne(companyId);
       reply.send(company);
@@ -151,11 +146,6 @@ export default async (fastify) => {
     },
     async (request, reply) => {
       const { companyId } = request.params;
-      if (!companyId) {
-        const error = new Error(`Invalid company id: ${companyId}`);
-        error.status = 400;
-        reply.send(error);
-      }
       const company = { ...request.body };
       try {
         const previous = await companyService.update(companyId, company);

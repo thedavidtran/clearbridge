@@ -1,29 +1,66 @@
-import { afterAll, describe, expect, test } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+} from "vitest";
 import app from "../../src/app.js";
+import CompanyModel from "../../src/model/company";
 
 afterAll(async () => {
   await app.close();
 });
 
+beforeAll(async () => {
+  await CompanyModel.deleteMany({}); // Remove all companies
+});
+
+const cleanUpData = async () => {
+  await CompanyModel.deleteMany({ name: "TEST COMPANY" });
+  await CompanyModel.deleteMany({ name: "TEST COMPANY UPDATED" });
+};
+
+beforeEach(cleanUpData);
+afterEach(cleanUpData);
+
 describe("Company Routes", () => {
   const companiesUri = "/companies";
-  test("GET - should retrieve list of companies", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: companiesUri,
+  describe("GET - should retrieve list of companies", async () => {
+    test("Empty list of companies", async () => {
+      const response = await app.inject({
+        method: "GET",
+        url: companiesUri,
+      });
+      expect(response.statusCode).toBe(200);
+      const companies = response.json();
+      expect(companies.length).toBe(0);
     });
-    expect(response.statusCode).toBe(200);
-    const companies = response.json();
-    /**
-    expect(companies.length).toBe(2);
-    const [company] = companies;
-    expect(company.hasOwnProperty("name")).toBeTruthy();
-    expect(company.hasOwnProperty("location")).toBeTruthy();
-    expect(company.hasOwnProperty("description")).toBeTruthy();
-    const { location } = company;
-    expect(location.hasOwnProperty("city")).toBeTruthy();
-    expect(location.hasOwnProperty("state")).toBeTruthy();
-     */
+    test("Exists at least one company with all fields", async () => {
+      const source = await CompanyModel.create({
+        name: "TEST COMPANY",
+        location: { city: "Toronto", state: "ON" },
+        description: "Test description",
+        founded: "2023-03-27",
+      });
+      const response = await app.inject({
+        method: "GET",
+        url: companiesUri,
+      });
+      expect(response.statusCode).toBe(200);
+      const companies = response.json();
+      expect(companies.length).toBe(1);
+      const [company] = companies;
+      expect(company.hasOwnProperty("name")).toBeTruthy();
+      expect(company.hasOwnProperty("location")).toBeTruthy();
+      expect(company.hasOwnProperty("description")).toBeTruthy();
+      expect(company.hasOwnProperty("founded")).toBeTruthy();
+      const { location } = company;
+      expect(location.hasOwnProperty("city")).toBeTruthy();
+      expect(location.hasOwnProperty("state")).toBeTruthy();
+    });
   });
   describe("POST - add a company", async () => {
     test("request contains all required fields", async () => {
@@ -31,7 +68,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto",
             state: "ON",
@@ -63,7 +100,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           description: "Missing company name description",
         },
       });
@@ -77,7 +114,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             state: "ON",
           },
@@ -94,7 +131,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto",
           },
@@ -111,7 +148,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto",
             state: "ON",
@@ -128,7 +165,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X Very Long Name...........................................",
+          name: "TEST COMPANY Very Long Name...........................................",
           location: {
             city: "Toronto",
             state: "ON",
@@ -147,7 +184,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto Very Long ...................................................................",
             state: "ON",
@@ -166,7 +203,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto",
             state: "ON........",
@@ -185,7 +222,7 @@ describe("Company Routes", () => {
         method: "POST",
         url: companiesUri,
         body: {
-          name: "Company X",
+          name: "TEST COMPANY",
           location: {
             city: "Toronto",
             state: "ON",
@@ -206,7 +243,7 @@ describe("Company Routes", () => {
     });
   });
   describe("GET - get details of a company with invalid id", async () => {
-    test("Company exists", async () => {
+    test("Company does not exist", async () => {
       const companyId = "123456789012345678901234";
       const detailUri = `${companiesUri}/${companyId}`;
       const response = await app.inject({
@@ -214,6 +251,100 @@ describe("Company Routes", () => {
         url: detailUri,
       });
       expect(response.statusCode).toBe(404);
+    });
+  });
+  describe("DELETE - delete a company", async () => {
+    test("Missing companyId in path", async () => {
+      const response = await app.inject({
+        method: "DELETE",
+        url: companiesUri,
+      });
+      expect(response.statusCode).toBe(404);
+    });
+    test("Company does not exist", async () => {
+      const companyId = "123456789012345678901234";
+      const detailUri = `${companiesUri}/${companyId}`;
+      const response = await app.inject({
+        method: "DELETE",
+        url: detailUri,
+      });
+      expect(response.statusCode).toBe(404);
+    });
+    test("Company exists", async () => {
+      const company = await CompanyModel.create({
+        name: "TEST COMPANY",
+        location: { city: "Toronto", state: "ON" },
+        description: "Test description",
+      });
+      expect(company).not.toBe(null);
+      const detailUri = `${companiesUri}/${company.id}`;
+      const response = await app.inject({
+        method: "DELETE",
+        url: detailUri,
+      });
+      expect(response.statusCode).toBe(200);
+    });
+  });
+  describe("PUT - Update a company", async () => {
+    test("Missing companyId in path", async () => {
+      const response = await app.inject({
+        method: "PUT",
+        body: {
+          name: "TEST COMPANY",
+          location: {
+            city: "Toronto",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+        url: companiesUri,
+      });
+      expect(response.statusCode).toBe(404);
+    });
+    test("Company does not exist", async () => {
+      const companyId = "123456789012345678901234";
+      const detailUri = `${companiesUri}/${companyId}`;
+      const response = await app.inject({
+        method: "PUT",
+        body: {
+          name: "TEST COMPANY",
+          location: {
+            city: "Toronto",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+        url: detailUri,
+      });
+      expect(response.statusCode).toBe(500);
+      expect(JSON.parse(response.body).message).toBe(
+        `Failed to update company id: ${companyId}`
+      );
+    });
+    test("Company exists", async () => {
+      const company = await CompanyModel.create({
+        name: "TEST COMPANY",
+        location: { city: "Toronto", state: "ON" },
+        description: "Test description",
+      });
+      expect(company).not.toBe(null);
+      const detailUri = `${companiesUri}/${company.id}`;
+      const response = await app.inject({
+        method: "PUT",
+        body: {
+          name: "TEST COMPANY UPDATED",
+          location: {
+            city: "Toronto",
+            state: "ON",
+          },
+          description:
+            "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        },
+        url: detailUri,
+      });
+      expect(response.statusCode).toBe(200);
     });
   });
 });
