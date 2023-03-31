@@ -9,11 +9,13 @@ const founderSchema = new Schema(
       required: true,
       unique: true,
       trim: true,
+      maxlength: 50,
     },
     title: {
       type: String,
       required: true,
       trim: true,
+      maxlength: 20,
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,

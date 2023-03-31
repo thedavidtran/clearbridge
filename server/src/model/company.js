@@ -8,17 +8,20 @@ const companySchema = new Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 30,
     },
     location: {
       city: {
         type: String,
         required: true,
         trim: true,
+        maxlength: 50,
       },
       state: {
         type: String,
         required: true,
         trim: true,
+        maxlength: 5,
       },
     },
     founded: {
@@ -28,6 +31,7 @@ const companySchema = new Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 500,
     },
     createdAt: {
       type: Date,
