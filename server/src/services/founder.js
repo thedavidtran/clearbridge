@@ -40,8 +40,12 @@ const insert = (FounderModel) => async (data) => {
     const result = await FounderModel.create(sanitizeFounderObject(data));
     return toFounderObject(result);
   } catch (err) {
-    console.error(err);
-    throw err;
+    switch (err.code) {
+      case 11000:
+        throw new Error("Founder already exists");
+      default:
+        throw err;
+    }
   }
 };
 
