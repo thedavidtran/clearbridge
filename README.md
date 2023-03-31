@@ -51,11 +51,15 @@ Once the calls pass the route validation, routes will invoke the related service
 - String lengths validation done at the routing level, same lengths are specified on the database collection schema.
 
 #### REST API
+```text
 /companies
+```
 - [GET] - Retrieves list of companies, returns an array of company objects
-- [POST] - Adds a company
+- [POST] - Adds a company.
 
+```text
 /companies/<companyId>
+```
 - [GET] - Retrieves the details of a single company if companyId matches the identifier
 - [PUT] - Updates the details of the company that matches the companyId identifier
 - [DELETE] - Removes the company from the directory that matches the companyId identifier
@@ -68,16 +72,16 @@ Once the calls pass the route validation, routes will invoke the related service
 ```text
 /founders
 ```
-- [PUT] - adds a founder
+- [PUT] - Adds a founder.
 
 #### Services
 
 ##### Company Service
 This service deals with all API related to the company context.
-- Creating a company
+- Creating a company.
 - Reading all companies in the system.
 - Reading details of a specific company.
-- Deleting a company
+- Deleting a company.
 - Updating a company.
 
 ##### Founder Service
@@ -89,13 +93,13 @@ This service deals with all API related to the founder context.
 ##### Company Collection
 ###### fields
 - name:string - name of the company.
-- location:object - location information.
-  - city:string - city name.
-  - state:string - stores the state abbreviation.
-- description:string - description of the company.
-- founded:date - founded date.
-- createdAt:date - date the record was created.
-- updatedAt:date - date the record was last modified.
+- location:object - Location information.
+  - city:string - City name.
+  - state:string - Stores the state abbreviation.
+- description:string - Description of the company.
+- founded:date - Founded date.
+- createdAt:date - Date the record was created.
+- updatedAt:date - Date the record was last modified.
 
 ###### indexes
 - Added an index on "name" to display companies in sorted alphabetical order. This index is case sensitive.
