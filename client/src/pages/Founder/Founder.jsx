@@ -7,9 +7,13 @@ const Founder = ({ companyId }) => {
   const founderQuery = useQuery({
     queryKey: ["founders", companyId],
     queryFn: () => {
-      return fetch(`/founders?companyId=${companyId}`, {
-        method: "GET",
-      }).then(async (res) => {
+      return fetch(
+        `${process.env.REACT_APP_API_URL}/founders?companyId=${companyId}`,
+        {
+          method: "GET",
+          mode: "cors",
+        }
+      ).then(async (res) => {
         return res.json();
       });
     },

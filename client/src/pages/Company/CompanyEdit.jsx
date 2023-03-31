@@ -23,9 +23,10 @@ const CompanyEdit = ({ isCreate }) => {
   const companyQuery = useQuery({
     queryKey: ["companyDetail", companyId],
     queryFn: () => {
-      const url = `/companies/${companyId}`;
+      const url = `${process.env.REACT_APP_API_URL}/companies/${companyId}`;
       return fetch(url, {
         method: "GET",
+        mode: "cors",
       }).then(async (res) => {
         return res.json();
       });
@@ -47,13 +48,19 @@ const CompanyEdit = ({ isCreate }) => {
   const companyMutation = useMutation({
     mutationKey: isCreate ? ["companyCreate"] : ["companyUpdate", companyId],
     mutationFn: async (company) => {
-      await fetch(isCreate ? "/companies" : `/companies/${companyId}`, {
-        method: isCreate ? "POST" : "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(company),
-      }).then(async (res) => {
+      await fetch(
+        isCreate
+          ? `${process.env.REACT_APP_API_URL}/companies`
+          : `${process.env.REACT_APP_API_URL}/companies/${companyId}`,
+        {
+          method: isCreate ? "POST" : "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(company),
+        }
+      ).then(async (res) => {
         if (!res.ok) {
           // Handle bad responses
           let body = await res.json();

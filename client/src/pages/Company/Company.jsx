@@ -12,7 +12,7 @@ const Company = () => {
   } = useQuery({
     queryKey: ["companies"],
     queryFn: () => {
-      return fetch("https://clearbridge-backend.onrender.com/", {
+      return fetch(`${process.env.REACT_APP_API_URL}/companies`, {
         method: "GET",
         mode: "cors",
       }).then(async (res) => {

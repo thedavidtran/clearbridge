@@ -17,13 +17,19 @@ const FounderEdit = ({ isCreate }) => {
   const founderMutation = useMutation({
     mutationKey: ["founderCreate"],
     mutationFn: async (founder) => {
-      await fetch(isCreate ? "/founders" : `/founders/${founderId}`, {
-        method: isCreate ? "POST" : "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(founder),
-      }).then(async (res) => {
+      await fetch(
+        isCreate
+          ? `${process.env.REACT_APP_API_URL}/founders`
+          : `${process.env.REACT_APP_API_URL}/founders/${founderId}`,
+        {
+          method: isCreate ? "POST" : "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(founder),
+        }
+      ).then(async (res) => {
         if (!res.ok) {
           // Handle bad responses
           let body = await res.json();

@@ -16,9 +16,10 @@ const CompanyDetail = () => {
   } = useQuery({
     queryKey: ["companyDetail", companyId],
     queryFn: () => {
-      const url = `/companies/${companyId}`;
+      const url = `${process.env.REACT_APP_API_URL}/companies/${companyId}`;
       return fetch(url, {
         method: "GET",
+        mode: "cors",
       }).then(async (res) => {
         return res.json();
       });
@@ -28,9 +29,10 @@ const CompanyDetail = () => {
   const companyMutation = useMutation({
     mutationKey: ["companyDelete"],
     mutationFn: () => {
-      const url = `/companies/${companyId}`;
+      const url = `${process.env.REACT_APP_API_URL}/companies/${companyId}`;
       return fetch(url, {
         method: "DELETE",
+        mode: "cors",
       }).then(async (res) => {
         return res.json();
       });
