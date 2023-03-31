@@ -1,7 +1,11 @@
 # Take Home Assignment Company Directory
 
-## Front End
+## Deployed
+- [frontend](https://clearbridge.vercel.app/): https://clearbridge.vercel.app/
+- [backend](https://clearbridge-backend.onrender.com/): https://clearbridge-backend.onrender.com/
+  (note the backend only supports routes mentioned below in the REST API section).
 
+## Front End
 The front end project is under the '/client' subdirectory.
 
 Install dependencies from '/client'
@@ -44,7 +48,8 @@ Once the calls pass the route validation, routes will invoke the related service
 
 ### Design Decisions
 - Assume that founders cannot have the same name, ideally we would support this, but this is a simplified assumption. This allows us to just add a unique index on the name field of the Founder collection.
-- String lenths
+- String lengths validation done at the routing level, same lengths are specified on the database collection schema.
+
 #### REST API
 /companies
 - [GET] - Retrieves list of companies, returns an array of company objects
@@ -64,6 +69,21 @@ Once the calls pass the route validation, routes will invoke the related service
 /founders
 ```
 - [PUT] - adds a founder
+
+#### Services
+
+##### Company Service
+This service deals with all API related to the company context.
+- Creating a company
+- Reading all companies in the system.
+- Reading details of a specific company.
+- Deleting a company
+- Updating a company.
+
+##### Founder Service
+This service deals with all API related to the founder context.
+- Creating a founder.
+- Reading all founders for a specific company.
 
 #### Database
 ##### Company Collection
