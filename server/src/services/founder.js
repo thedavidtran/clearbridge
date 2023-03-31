@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 
 const { ObjectId } = mongoose.mongo;
 const sanitizeFounderObject = (founder) => {
-  return {
+  const result = {
     name: founder.name,
     title: founder.title,
-    company: new ObjectId(founder.companyId),
   };
+  if (founder.companyId) result.company = new ObjectId(founder.companyId);
+  return result;
 };
 
 const toFounderObject = (founderDocument) => {

@@ -7,10 +7,13 @@ import {
   expect,
   test,
 } from "vitest";
+
+import mongoose from "mongoose";
 import app from "../../src/app.js";
 import CompanyModel from "../../src/model/company";
 import FounderModel from "../../src/model/founder.js";
 
+const { ObjectId } = mongoose.mongo;
 afterAll(async () => {
   await app.close();
 });
@@ -80,13 +83,13 @@ describe("Founder Routes", () => {
         description: "Test description",
         founded: "2023-03-27",
       });
-      const foundersQueryUri = `${foundersUri}?companyId=${company.id}`;
       const response = await app.inject({
         method: "POST",
-        url: foundersQueryUri,
+        url: foundersUri,
         body: {
           name: "TEST USER",
           title: "Developer",
+          companyId: company.id,
         },
       });
       expect(response.statusCode).toBe(200);
@@ -118,12 +121,12 @@ describe("Founder Routes", () => {
         description: "Test description",
         founded: "2023-03-27",
       });
-      const foundersQueryUri = `${foundersUri}?companyId=${company.id}`;
       const response = await app.inject({
         method: "POST",
-        url: foundersQueryUri,
+        url: foundersUri,
         body: {
           name: "TEST USER",
+          companyId: company.id,
         },
       });
       expect(response.statusCode).toBe(400);
@@ -141,15 +144,15 @@ describe("Founder Routes", () => {
       await FounderModel.create({
         name: "TEST USER",
         title: "Developer",
-        company: company.id,
+        company: new ObjectId(company.id),
       });
-      const foundersQueryUri = `${foundersUri}?companyId=${company.id}`;
       const response = await app.inject({
         method: "POST",
-        url: foundersQueryUri,
+        url: foundersUri,
         body: {
           name: "TEST USER",
           title: "Developer",
+          companyId: company.id,
         },
       });
       expect(response.statusCode).toBe(500);
