@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
+import TextArea from "../../components/ui/TextArea";
 
 const CompanyEdit = ({ isCreate }) => {
   const navigate = useNavigate();
@@ -173,8 +174,10 @@ const CompanyEdit = ({ isCreate }) => {
           onChange={onChange}
         />
         <label className="text-bold col-span-full">Description</label>
-        <Input
+        <TextArea
           name="description"
+          rows="4"
+          type="textarea"
           className="col-span-full"
           htmlFor="description"
           required
