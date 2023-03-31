@@ -27,8 +27,10 @@ const Company = () => {
         <div>Error occurred: {error.message}</div>
       ) : isLoading ? (
         <div>Loading...</div>
-      ) : (
+      ) : companies.length ? (
         <CompanyList companies={companies} />
+      ) : (
+        <div>No Companies</div>
       )}
       <div className="py-2 flex flex-row-reverse">
         <CompanyAddButton />
