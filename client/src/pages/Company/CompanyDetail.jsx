@@ -37,9 +37,8 @@ const CompanyDetail = () => {
         return res.json();
       });
     },
-    onSuccess: (data) => {
-      const { name } = data;
-      alert(`Company ${name} removed.`);
+    onSuccess: () => {
+      alert(`Company removed.`);
       navigate("/");
     },
   });
